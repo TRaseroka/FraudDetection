@@ -1,0 +1,28 @@
+services:
+  fraud-api:
+    build:
+      context: .
+      dockerfile: FraudDetection.Api/Dockerfile
+    container_name: fraud-api
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__FraudDb: Host=postgres;Port=5432;Database=frauddb;Username=frauduser;Password=fraudpassword
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    container_name: fraud-postgres
+    environment:
+      POSTGRES_USER: frauduser
+      POSTGRES_PASSWORD: fraudpassword
+      POSTGRES_DB: frauddb
+    ports:
+      - "5432:5432"
+    volumes:
+      - fraud_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  fraud_postgres_data:

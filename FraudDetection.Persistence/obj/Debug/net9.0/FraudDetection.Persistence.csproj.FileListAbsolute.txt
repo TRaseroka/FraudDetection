@@ -1,0 +1,17 @@
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\bin\Debug\net9.0\FraudDetection.Persistence.deps.json
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\bin\Debug\net9.0\FraudDetection.Persistence.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\bin\Debug\net9.0\FraudDetection.Persistence.pdb
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\bin\Debug\net9.0\FraudDetection.Application.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\bin\Debug\net9.0\FraudDetection.Domain.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\bin\Debug\net9.0\FraudDetection.Application.pdb
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\bin\Debug\net9.0\FraudDetection.Domain.pdb
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Persistence.csproj.AssemblyReference.cache
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Persistence.AssemblyInfoInputs.cache
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Persistence.AssemblyInfo.cs
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Persistence.csproj.CoreCompileInputs.cache
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDet.D07EE3E6.Up2Date
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Persistence.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\refint\FraudDetection.Persistence.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Persistence.pdb
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\ref\FraudDetection.Persistence.dll

@@ -1,0 +1,15 @@
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\bin\Debug\net9.0\FraudDetection.Application.deps.json
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\bin\Debug\net9.0\FraudDetection.Application.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\bin\Debug\net9.0\FraudDetection.Application.pdb
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\bin\Debug\net9.0\FraudDetection.Domain.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\bin\Debug\net9.0\FraudDetection.Domain.pdb
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\FraudDetection.Application.csproj.AssemblyReference.cache
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\FraudDetection.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\FraudDetection.Application.AssemblyInfoInputs.cache
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\FraudDetection.Application.AssemblyInfo.cs
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\FraudDetection.Application.csproj.CoreCompileInputs.cache
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\FraudDet.400BA8D2.Up2Date
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\FraudDetection.Application.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\refint\FraudDetection.Application.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\FraudDetection.Application.pdb
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\ref\FraudDetection.Application.dll

@@ -1,0 +1,5 @@
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Infrastructure.AssemblyInfo.cs
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Infrastructure.csproj.CoreCompileInputs.cache
