@@ -2,11 +2,23 @@ namespace FraudDetection.Application.DTOs;
 
 public class TransactionDto
 {
-    public string TransactionId { get; set; } = string.Empty;
-    public string CustomerId { get; set; } = string.Empty;
+    public Guid Id { get; set; }
+
+    public Guid CustomerId { get; set; }
+
+    public string Source { get; set; } = string.Empty;
+
+    public string ExternalTransactionId { get; set; } = string.Empty;
+
+    public DateTime TransactionDate { get; set; }
+
     public decimal Amount { get; set; }
+
     public string Currency { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
-    public string MerchantId { get; set; } = string.Empty;
-    public DateTime OccurredAt { get; set; }
+
+    public string Description { get; set; } = string.Empty;
+
+    public string PaymentMethod { get; set; } = string.Empty;
+
+    public string Direction { get; set; } = string.Empty;
 }

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using FraudDetection.Application.DTOs;
 using FraudDetection.Application.Interfaces;
@@ -18,10 +19,10 @@ public class TransactionClient : ITransactionClient
         CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.GetAsync(
-            $"api/transactions/{transactionId}",
+            $"/api/transactions/{transactionId}",
             cancellationToken);
 
-        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        if (response.StatusCode == HttpStatusCode.NotFound)
         {
             return null;
         }
@@ -30,5 +31,16 @@ public class TransactionClient : ITransactionClient
 
         return await response.Content.ReadFromJsonAsync<TransactionDto>(
             cancellationToken: cancellationToken);
+    }
+
+    public async Task<IReadOnlyCollection<TransactionDto>> GetAllAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var transactions =
+            await _httpClient.GetFromJsonAsync<List<TransactionDto>>(
+                "/api/transactions",
+                cancellationToken);
+
+        return transactions ?? [];
     }
 }

@@ -9,8 +9,12 @@ services:
     environment:
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__FraudDb: Host=postgres;Port=5432;Database=frauddb;Username=frauduser;Password=fraudpassword
+      TransactionApi__BaseUrl: http://transaction-api:8080
     depends_on:
       - postgres
+    networks:
+      - default
+      - shared-services
 
   postgres:
     image: postgres:16
@@ -26,3 +30,7 @@ services:
 
 volumes:
   fraud_postgres_data:
+
+networks:
+  shared-services:
+    external: true
