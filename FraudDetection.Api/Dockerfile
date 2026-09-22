@@ -8,7 +8,7 @@ WORKDIR /src
 COPY ["FraudDetection.Api/FraudDetection.Api.csproj", "FraudDetection.Api/"]
 COPY ["FraudDetection.Application/FraudDetection.Application.csproj", "FraudDetection.Application/"]
 COPY ["FraudDetection.Domain/FraudDetection.Domain.csproj", "FraudDetection.Domain/"]
-COPY ["FraudDetection.Infrastructure/FraudDetection.Infrastructure.csproj", "FraudDetection.Infrastructure/"]
+COPY ["FraudDetection.Persistence/FraudDetection.Persistence.csproj", "FraudDetection.Persistence/"]
 
 RUN dotnet restore "FraudDetection.Api/FraudDetection.Api.csproj"
 
