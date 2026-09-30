@@ -13,3 +13,4 @@ C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\Fr
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\refint\FraudDetection.Application.dll
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\FraudDetection.Application.pdb
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\ref\FraudDetection.Application.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Application\obj\Debug\net9.0\FraudDetection.Application.sourcelink.json

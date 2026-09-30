@@ -9,3 +9,4 @@ C:\Users\TRaseroka\FraudDetection\FraudDetection.Domain\obj\Debug\net9.0\FraudDe
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Domain\obj\Debug\net9.0\refint\FraudDetection.Domain.dll
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Domain\obj\Debug\net9.0\FraudDetection.Domain.pdb
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Domain\obj\Debug\net9.0\ref\FraudDetection.Domain.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Domain\obj\Debug\net9.0\FraudDetection.Domain.sourcelink.json

@@ -102,3 +102,4 @@ C:\Users\TRaseroka\FraudDetection\FraudDetection.Tests\obj\Debug\net9.0\refint\F
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Tests\obj\Debug\net9.0\FraudDetection.Tests.pdb
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Tests\obj\Debug\net9.0\FraudDetection.Tests.genruntimeconfig.cache
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Tests\obj\Debug\net9.0\ref\FraudDetection.Tests.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Tests\obj\Debug\net9.0\FraudDetection.Tests.sourcelink.json

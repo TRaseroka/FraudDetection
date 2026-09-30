@@ -15,3 +15,4 @@ C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\Fr
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\refint\FraudDetection.Persistence.dll
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Persistence.pdb
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\ref\FraudDetection.Persistence.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Persistence\obj\Debug\net9.0\FraudDetection.Persistence.sourcelink.json

@@ -156,3 +156,7 @@ C:\Users\TRaseroka\FraudDetection\FraudDetection.Api\obj\Debug\net9.0\refint\Fra
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Api\obj\Debug\net9.0\FraudDetection.Api.pdb
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Api\obj\Debug\net9.0\FraudDetection.Api.genruntimeconfig.cache
 C:\Users\TRaseroka\FraudDetection\FraudDetection.Api\obj\Debug\net9.0\ref\FraudDetection.Api.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\TRaseroka\FraudDetection\FraudDetection.Api\obj\Debug\net9.0\FraudDetection.Api.sourcelink.json
