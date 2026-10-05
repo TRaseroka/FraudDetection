@@ -43,4 +43,16 @@ public class TransactionClient : ITransactionClient
 
         return transactions ?? [];
     }
+
+    public async Task<IReadOnlyCollection<TransactionDto>> GetByCustomerIdAsync(
+    Guid customerId,
+    CancellationToken cancellationToken = default)
+{
+    var transactions =
+        await _httpClient.GetFromJsonAsync<List<TransactionDto>>(
+            $"/api/transactions/customer/{customerId}",
+            cancellationToken);
+
+    return transactions ?? [];
+}
 }

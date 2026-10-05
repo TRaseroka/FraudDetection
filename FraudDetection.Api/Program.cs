@@ -20,6 +20,7 @@ builder.Services.AddDbContext<FraudDbContext>(options =>
 builder.Services.AddScoped< IFraudAssessmentRepository, FraudAssessmentRepository>();
 builder.Services.AddScoped<IFraudRule, HighValueTransactionRule>();
 builder.Services.AddScoped<IFraudRule, CashDepositRule>();
+builder.Services.AddScoped<IFraudRule, TransactionVelocityRule>();
 builder.Services.AddScoped<IFraudAssessmentService, FraudAssessmentService>();
 builder.Services.AddHttpClient<ITransactionClient, TransactionClient>(client =>
 {
@@ -80,6 +81,34 @@ app.MapPost("/api/fraud/assess/{transactionId}",
             : Results.Ok(result);
     });
 
+app.MapGet("/api/fraud/assessments",
+    async (
+        IFraudAssessmentRepository repository,
+        CancellationToken cancellationToken) =>
+    {
+        var assessments =
+            await repository.GetAllAsync(cancellationToken);
+
+        return Results.Ok(assessments);
+    })
+    .WithName("GetFraudAssessments");
+
+app.MapGet("/api/fraud/assessments/{transactionId}",
+    async (
+        string transactionId,
+        IFraudAssessmentRepository repository,
+        CancellationToken cancellationToken) =>
+    {
+        var assessments =
+            await repository.GetByTransactionIdAsync(
+                transactionId,
+                cancellationToken);
+
+        return assessments.Count == 0
+            ? Results.NotFound()
+            : Results.Ok(assessments);
+    })
+    .WithName("GetFraudAssessmentsByTransactionId");
 app.Run();
 
 

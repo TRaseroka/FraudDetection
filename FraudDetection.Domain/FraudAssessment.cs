@@ -12,5 +12,7 @@ public class FraudAssessment
 
     public bool IsSuspicious { get; set; }
 
+    public string TriggeredRules { get; set; } = string.Empty;
+
     public DateTime EvaluatedAt { get; set; } = DateTime.UtcNow;
 }

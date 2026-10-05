@@ -1,5 +1,7 @@
-using FraudDetection.Domain;
 using FraudDetection.Application.Interfaces;
+using FraudDetection.Domain;
+using Microsoft.EntityFrameworkCore;
+
 namespace FraudDetection.Persistence.Repositories;
 
 public class FraudAssessmentRepository : IFraudAssessmentRepository
@@ -19,4 +21,24 @@ public class FraudAssessmentRepository : IFraudAssessmentRepository
 
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyCollection<FraudAssessment>> GetAllAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.FraudAssessments
+            .AsNoTracking()
+            .OrderByDescending(x => x.EvaluatedAt)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyCollection<FraudAssessment>> GetByTransactionIdAsync(
+    string transactionId,
+    CancellationToken cancellationToken = default)
+{
+    return await _dbContext.FraudAssessments
+        .AsNoTracking()
+        .Where(x => x.TransactionId == transactionId)
+        .OrderByDescending(x => x.EvaluatedAt)
+        .ToListAsync(cancellationToken);
+}
 }

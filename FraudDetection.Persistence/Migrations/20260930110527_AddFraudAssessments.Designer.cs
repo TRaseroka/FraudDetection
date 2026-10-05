@@ -3,6 +3,7 @@ using System;
 using FraudDetection.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FraudDetection.Persistence.Migrations
 {
     [DbContext(typeof(FraudDbContext))]
-    partial class FraudDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260930110527_AddFraudAssessments")]
+    partial class AddFraudAssessments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,10 +45,6 @@ namespace FraudDetection.Persistence.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("TransactionId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("TriggeredRules")
                         .IsRequired()
                         .HasColumnType("text");
 

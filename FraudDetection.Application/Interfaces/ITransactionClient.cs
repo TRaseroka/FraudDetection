@@ -10,4 +10,7 @@ public interface ITransactionClient
 
     Task<IReadOnlyCollection<TransactionDto>> GetAllAsync(
         CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<TransactionDto>> GetByCustomerIdAsync(
+      Guid customerId,
+      CancellationToken cancellationToken = default);
 }
