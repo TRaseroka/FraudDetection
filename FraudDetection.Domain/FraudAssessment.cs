@@ -12,7 +12,7 @@ public class FraudAssessment
 
     public bool IsSuspicious { get; set; }
 
-    public string TriggeredRules { get; set; } = string.Empty;
+    public List<TriggeredRule> TriggeredRules { get; set; } = new();
 
     public DateTime EvaluatedAt { get; set; } = DateTime.UtcNow;
 }

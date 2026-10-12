@@ -45,13 +45,47 @@ namespace FraudDetection.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("TriggeredRules")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
+                    b.HasIndex("TransactionId")
+                        .IsUnique();
+
                     b.ToTable("FraudAssessments");
+                });
+
+            modelBuilder.Entity("FraudDetection.Domain.FraudAssessment", b =>
+                {
+                    b.OwnsMany("FraudDetection.Domain.TriggeredRule", "TriggeredRules", b1 =>
+                        {
+                            b1.Property<Guid>("FraudAssessmentId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("__synthesizedOrdinal")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Code")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<int>("RiskScore")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("FraudAssessmentId", "__synthesizedOrdinal");
+
+                            b1.ToTable("FraudAssessments");
+
+                            b1.ToJson("TriggeredRules");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FraudAssessmentId");
+                        });
+
+                    b.Navigation("TriggeredRules");
                 });
 #pragma warning restore 612, 618
         }

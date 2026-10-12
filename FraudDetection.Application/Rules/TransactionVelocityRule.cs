@@ -1,23 +1,25 @@
 using FraudDetection.Application.DTOs;
 using FraudDetection.Application.Interfaces;
-
+using FraudDetection.Application.Configuration;
 namespace FraudDetection.Application.Rules;
+using Microsoft.Extensions.Options;
 
 public class TransactionVelocityRule : IFraudRule
 {
     private readonly ITransactionClient _transactionClient;
-
-    public TransactionVelocityRule(ITransactionClient transactionClient)
+      private readonly FraudRuleOptions _options;
+    public TransactionVelocityRule(ITransactionClient transactionClient, IOptions<FraudRuleOptions> options)
     {
         _transactionClient = transactionClient;
+        _options = options.Value;
     }
 
     public string Code => "HIGH_TRANSACTION_VELOCITY";
 
     public string Description =>
-        "Customer has made 3 or more transactions within 10 minutes.";
+        $"Customer has made {_options.VelocityTransactionCount} or more transactions within {_options.VelocityWindowMinutes} minutes.";
 
-    public int RiskScore => 60;
+    public int RiskScore => _options.VelocityRiskScore;
 
     public async Task<bool> IsMatchAsync(
         TransactionDto transaction,
@@ -29,13 +31,13 @@ public class TransactionVelocityRule : IFraudRule
                 cancellationToken);
 
         var windowStart =
-            transaction.TransactionDate.AddMinutes(-10);
+            transaction.TransactionDate.AddMinutes(-_options.VelocityWindowMinutes);
 
         var recentTransactionCount =
             customerTransactions.Count(x =>
                 x.TransactionDate >= windowStart &&
                 x.TransactionDate <= transaction.TransactionDate);
 
-        return recentTransactionCount >= 3;
+        return recentTransactionCount >= _options.VelocityTransactionCount;
     }
 }
