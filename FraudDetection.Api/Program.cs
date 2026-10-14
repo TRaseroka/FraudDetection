@@ -24,21 +24,18 @@ builder.Services.AddDbContext<FraudDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("FraudDb")));
 
-// Repository
-builder.Services.AddScoped<
-    IFraudAssessmentRepository,
-    FraudAssessmentRepository>();
+// Repositories
+builder.Services.AddScoped<IFraudAssessmentRepository,FraudAssessmentRepository>();
+builder.Services.AddScoped<IFraudRuleConfigurationRepository,FraudRuleConfigurationRepository>();
 
 // Fraud Rules
 builder.Services.AddScoped<IFraudRule, HighValueTransactionRule>();
 builder.Services.AddScoped<IFraudRule, CashDepositRule>();
 builder.Services.AddScoped<IFraudRule, TransactionVelocityRule>();
 
-// Fraud Assessment Service
-builder.Services.AddScoped<
-    IFraudAssessmentService,
-    FraudAssessmentService>();
-
+// Services
+builder.Services.AddScoped< IFraudAssessmentService, FraudAssessmentService>();
+builder.Services.AddScoped< IFraudRuleManagementService,FraudRuleManagementService>();
 // Fraud Rule Configuration
 builder.Services.Configure<FraudRuleOptions>(
     builder.Configuration.GetSection(

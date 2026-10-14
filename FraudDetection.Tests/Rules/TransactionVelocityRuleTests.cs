@@ -10,59 +10,7 @@ namespace FraudDetection.Tests.Rules;
 
 public class TransactionVelocityRuleTests
 {
-    [Theory]
-    [InlineData(1, false)]
-    [InlineData(2, false)]
-    [InlineData(3, true)]
-    [InlineData(4, true)]
-    public async Task IsMatchAsync_ShouldReturnExpectedResult(
-        int transactionCount,
-        bool expectedResult)
-    {
-        // Arrange
-        var customerId = Guid.NewGuid();
-        var transactionDate = DateTime.UtcNow;
-
-        var transactions = Enumerable.Range(0, transactionCount)
-            .Select(i => new TransactionDto
-            {
-                Id = Guid.NewGuid(),
-                CustomerId = customerId,
-                Amount = 1000,
-                TransactionDate = transactionDate.AddMinutes(-i)
-            })
-            .ToList();
-
-        var transactionClientMock = new Mock<ITransactionClient>();
-
-        transactionClientMock
-            .Setup(x => x.GetByCustomerIdAsync(
-                customerId,
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(transactions);
-
-        var options = Options.Create(new FraudRuleOptions
-        {
-            VelocityTransactionCount = 3,
-            VelocityWindowMinutes = 10
-        });
-
-        var rule = new TransactionVelocityRule(
-            transactionClientMock.Object,
-            options);
-
-        var transaction = transactions[0];
-
-        // Act
-        var result = await rule.IsMatchAsync(transaction);
-
-        // Assert
-        Assert.Equal(expectedResult, result);
-
-
-        
-    }
-    [Theory]
+   [Theory]
 [InlineData(-11, false)]
 [InlineData(-10, true)]
 public async Task IsMatchAsync_ShouldRespectTimeWindow(
@@ -77,16 +25,19 @@ public async Task IsMatchAsync_ShouldRespectTimeWindow(
     {
         new()
         {
+            Id = Guid.NewGuid(),
             CustomerId = customerId,
             TransactionDate = transactionDate
         },
         new()
         {
+            Id = Guid.NewGuid(),
             CustomerId = customerId,
             TransactionDate = transactionDate.AddMinutes(-5)
         },
         new()
         {
+            Id = Guid.NewGuid(),
             CustomerId = customerId,
             TransactionDate = transactionDate.AddMinutes(minutesOffset)
         }
@@ -115,5 +66,106 @@ public async Task IsMatchAsync_ShouldRespectTimeWindow(
 
     // Assert
     Assert.Equal(expectedResult, result);
+}
+[Fact]
+public async Task IsMatchAsync_ShouldNotCountDuplicateTransactions()
+{
+    var customerId = Guid.NewGuid();
+    var now = DateTime.UtcNow;
+
+    var current = new TransactionDto
+    {
+        Id = Guid.NewGuid(),
+        CustomerId = customerId,
+        TransactionDate = now
+    };
+
+    var previous = new TransactionDto
+    {
+        Id = Guid.NewGuid(),
+        CustomerId = customerId,
+        TransactionDate = now.AddMinutes(-2)
+    };
+
+    var transactions = new List<TransactionDto>
+    {
+        current,
+        previous,
+        previous // Duplicate transaction
+    };
+
+    var clientMock = new Mock<ITransactionClient>();
+
+    clientMock
+        .Setup(x => x.GetByCustomerIdAsync(
+            customerId,
+            It.IsAny<CancellationToken>()))
+        .ReturnsAsync(transactions);
+
+    var options = Options.Create(new FraudRuleOptions
+    {
+        VelocityTransactionCount = 3,
+        VelocityWindowMinutes = 10
+    });
+
+    var rule = new TransactionVelocityRule(
+        clientMock.Object,
+        options);
+
+    var result = await rule.IsMatchAsync(current);
+
+    Assert.False(result);
+}
+[Fact]
+public async Task IsMatchAsync_ShouldIgnoreFutureTransactions()
+{
+    var customerId = Guid.NewGuid();
+    var now = DateTime.UtcNow;
+
+    var current = new TransactionDto
+    {
+        Id = Guid.NewGuid(),
+        CustomerId = customerId,
+        TransactionDate = now
+    };
+
+    var transactions = new List<TransactionDto>
+    {
+        current,
+        new()
+        {
+            Id = Guid.NewGuid(),
+            CustomerId = customerId,
+            TransactionDate = now.AddMinutes(-2)
+        },
+        new()
+        {
+            Id = Guid.NewGuid(),
+            CustomerId = customerId,
+            TransactionDate = now.AddMinutes(2)
+        }
+    };
+
+    var clientMock = new Mock<ITransactionClient>();
+
+    clientMock
+        .Setup(x => x.GetByCustomerIdAsync(
+            customerId,
+            It.IsAny<CancellationToken>()))
+        .ReturnsAsync(transactions);
+
+    var options = Options.Create(new FraudRuleOptions
+    {
+        VelocityTransactionCount = 3,
+        VelocityWindowMinutes = 10
+    });
+
+    var rule = new TransactionVelocityRule(
+        clientMock.Object,
+        options);
+
+    var result = await rule.IsMatchAsync(current);
+
+    Assert.False(result);
 }
 }

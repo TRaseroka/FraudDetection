@@ -22,22 +22,32 @@ public class TransactionVelocityRule : IFraudRule
     public int RiskScore => _options.VelocityRiskScore;
 
     public async Task<bool> IsMatchAsync(
-        TransactionDto transaction,
-        CancellationToken cancellationToken = default)
-    {
-        var customerTransactions =
-            await _transactionClient.GetByCustomerIdAsync(
-                transaction.CustomerId,
-                cancellationToken);
+    TransactionDto transaction,
+    CancellationToken cancellationToken = default)
+{
+    var customerTransactions =
+        await _transactionClient.GetByCustomerIdAsync(
+            transaction.CustomerId,
+            cancellationToken);
 
-        var windowStart =
-            transaction.TransactionDate.AddMinutes(-_options.VelocityWindowMinutes);
+    var windowStart =
+        transaction.TransactionDate.AddMinutes(
+            -_options.VelocityWindowMinutes);
 
-        var recentTransactionCount =
-            customerTransactions.Count(x =>
-                x.TransactionDate >= windowStart &&
-                x.TransactionDate <= transaction.TransactionDate);
+    // Count distinct previous transactions within the window.
+    var previousTransactionCount = customerTransactions
+        .Where(x =>
+            x.Id != transaction.Id &&
+            x.TransactionDate >= windowStart &&
+            x.TransactionDate <= transaction.TransactionDate)
+        .Select(x => x.Id)
+        .Distinct()
+        .Count();
 
-        return recentTransactionCount >= _options.VelocityTransactionCount;
-    }
+    // Include the transaction currently being assessed.
+    var totalTransactionCount = previousTransactionCount + 1;
+
+    return totalTransactionCount >=
+           _options.VelocityTransactionCount;
+}
 }

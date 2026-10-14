@@ -1,6 +1,8 @@
 using FraudDetection.Application.Interfaces;
 using FraudDetection.Domain;
 using Microsoft.EntityFrameworkCore;
+using FraudDetection.Application.Exceptions;
+using Npgsql;
 
 namespace FraudDetection.Persistence.Repositories;
 
@@ -13,14 +15,27 @@ public class FraudAssessmentRepository : IFraudAssessmentRepository
         _dbContext = dbContext;
     }
 
-    public async Task AddAsync(
-        FraudAssessment assessment,
-        CancellationToken cancellationToken = default)
-    {
-        _dbContext.FraudAssessments.Add(assessment);
+   public async Task AddAsync(
+    FraudAssessment assessment,
+    CancellationToken cancellationToken = default)
+{
+    _dbContext.FraudAssessments.Add(assessment);
 
+    try
+    {
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
+    catch (DbUpdateException ex)
+    when (ex.InnerException is PostgresException pgEx &&
+          pgEx.SqlState == PostgresErrorCodes.UniqueViolation &&
+          pgEx.ConstraintName == "IX_FraudAssessments_TransactionId")
+    {
+    _dbContext.Entry(assessment).State = EntityState.Detached;
+
+    throw new DuplicateFraudAssessmentException(
+        assessment.TransactionId);
+    }
+}
 
     public async Task<IReadOnlyCollection<FraudAssessment>> GetAllAsync(
         CancellationToken cancellationToken = default)

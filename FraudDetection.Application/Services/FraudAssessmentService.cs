@@ -4,6 +4,7 @@ using FraudDetection.Domain;
 using FraudDetection.Application.Configuration;
 using Microsoft.Extensions.Options;
 using AutoMapper;
+using FraudDetection.Application.Exceptions;
 
 namespace FraudDetection.Application.Services;
 
@@ -86,10 +87,31 @@ public class FraudAssessmentService : IFraudAssessmentService
             EvaluatedAt = DateTime.UtcNow
         };
 
-        await _fraudAssessmentRepository.AddAsync(
-            assessment,
+      try
+{
+    await _fraudAssessmentRepository.AddAsync(
+        assessment,
+        cancellationToken);
+
+    return _mapper.Map<FraudAssessmentDto>(assessment);
+}
+catch (DuplicateFraudAssessmentException)
+{
+    // Another request has already saved this transaction's assessment.
+    var savedAssessments =
+        await _fraudAssessmentRepository.GetByTransactionIdAsync(
+            transactionId,
             cancellationToken);
 
-      return _mapper.Map<FraudAssessmentDto>(assessment);
+    var savedAssessment = savedAssessments?.FirstOrDefault();
+
+    if (savedAssessment != null)
+    {
+        return _mapper.Map<FraudAssessmentDto>(savedAssessment);
+    }
+
+    // The duplicate was reported but no assessment could be found.
+    throw;
+}
     }
 }
