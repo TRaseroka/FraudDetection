@@ -11,6 +11,7 @@ using Moq;
 using Xunit;
 using Microsoft.Extensions.Logging.Abstractions;
 using FraudDetection.Application.Exceptions;
+using FraudDetection.Domain.Entities;
 
 namespace FraudDetection.Tests.Services;
 
@@ -19,8 +20,8 @@ public class FraudAssessmentServiceTests
     private readonly IMapper _mapper;
 
     public FraudAssessmentServiceTests()
-    {
-        var mapperConfiguration = new MapperConfiguration(
+{
+    var mapperConfiguration = new MapperConfiguration(
         cfg =>
         {
             cfg.AddProfile<FraudMappingProfile>();
@@ -30,9 +31,34 @@ public class FraudAssessmentServiceTests
     mapperConfiguration.AssertConfigurationIsValid();
 
     _mapper = mapperConfiguration.CreateMapper();
-}
-    
 
+    _ruleConfigurationRepositoryMock
+        .Setup(x => x.GetEnabledAsync(
+            It.IsAny<CancellationToken>()))
+        .ReturnsAsync(new List<FraudRuleConfiguration>
+        {
+            new()
+            {
+                Code = "HIGH_VALUE_TRANSACTION",
+                IsEnabled = true
+            },
+            new()
+            {
+                Code = "LARGE_CASH_DEPOSIT",
+                IsEnabled = true
+            },
+            new()
+            {
+                Code = "HIGH_TRANSACTION_VELOCITY",
+                IsEnabled = true
+            }
+        });
+}
+    private readonly Mock<IFraudRuleConfigurationRepository>
+    _ruleConfigurationRepositoryMock = new();
+      
+
+      
     private static IOptions<FraudRuleOptions> CreateOptions()
     {
         return Options.Create(new FraudRuleOptions
@@ -113,7 +139,8 @@ public class FraudAssessmentServiceTests
             rules,
             repository.Object,
             CreateOptions(),
-            _mapper);
+            _mapper,
+            _ruleConfigurationRepositoryMock.Object);
 
         // Act
         var result = await service.AssessTransactionAsync(transactionId);
@@ -192,7 +219,8 @@ public class FraudAssessmentServiceTests
             new List<IFraudRule> { rule.Object },
             repository.Object,
             CreateOptions(),
-            _mapper);
+            _mapper,
+            _ruleConfigurationRepositoryMock.Object);
 
         // Act
         var result = await service.AssessTransactionAsync(transactionId);
@@ -241,7 +269,8 @@ public class FraudAssessmentServiceTests
             new List<IFraudRule>(),
             repository.Object,
             CreateOptions(),
-            _mapper);
+            _mapper,
+            _ruleConfigurationRepositoryMock.Object);
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
@@ -301,7 +330,8 @@ public class FraudAssessmentServiceTests
             new List<IFraudRule> { rule.Object },
             repository.Object,
             CreateOptions(),
-            _mapper);
+            _mapper,
+            _ruleConfigurationRepositoryMock.Object);
 
         // Act
         var result = await service.AssessTransactionAsync(transactionId);
@@ -431,7 +461,8 @@ public async Task AssessAsync_WhenConcurrentInsertOccurs_ShouldReturnExistingAss
         new List<IFraudRule> { rule.Object },
         repository.Object,
         CreateOptions(),
-        _mapper);
+        _mapper,
+        _ruleConfigurationRepositoryMock.Object);
 
     // Act
     var result = await service.AssessTransactionAsync(transactionId);
@@ -455,5 +486,94 @@ public async Task AssessAsync_WhenConcurrentInsertOccurs_ShouldReturnExistingAss
         transactionId,
         It.IsAny<CancellationToken>()),
         Times.Exactly(2));
+}
+
+[Fact]
+public async Task AssessAsync_WhenRuleIsDisabled_ShouldNotExecuteRule()
+{
+    // Arrange
+    var transactionId = Guid.NewGuid().ToString();
+
+    var transaction = new TransactionDto
+    {
+        Id = Guid.Parse(transactionId),
+        CustomerId = Guid.NewGuid(),
+        Amount = 15000,
+        PaymentMethod = "Card",
+        TransactionDate = DateTime.UtcNow
+    };
+
+    var transactionClient = new Mock<ITransactionClient>();
+
+    transactionClient
+        .Setup(x => x.GetByIdAsync(
+            transactionId,
+            It.IsAny<CancellationToken>()))
+        .ReturnsAsync(transaction);
+
+    var repository = new Mock<IFraudAssessmentRepository>();
+
+    repository
+        .Setup(x => x.GetByTransactionIdAsync(
+            transactionId,
+            It.IsAny<CancellationToken>()))
+        .ReturnsAsync(Array.Empty<FraudAssessment>());
+
+    var highValueRule = new Mock<IFraudRule>();
+
+    highValueRule
+        .SetupGet(x => x.Code)
+        .Returns("HIGH_VALUE_TRANSACTION");
+
+    highValueRule
+        .SetupGet(x => x.RiskScore)
+        .Returns(70);
+
+    highValueRule
+        .Setup(x => x.IsMatchAsync(
+            It.IsAny<TransactionDto>(),
+            It.IsAny<CancellationToken>()))
+        .ReturnsAsync(true);
+
+    // Override the default setup for this test.
+    // No enabled configurations means the rule is disabled.
+    _ruleConfigurationRepositoryMock
+        .Setup(x => x.GetEnabledAsync(
+            It.IsAny<CancellationToken>()))
+        .ReturnsAsync(new List<FraudRuleConfiguration>());
+
+    var service = new FraudAssessmentService(
+        transactionClient.Object,
+        new List<IFraudRule> { highValueRule.Object },
+        repository.Object,
+        CreateOptions(),
+        _mapper,
+        _ruleConfigurationRepositoryMock.Object);
+
+    // Act
+    var result = await service.AssessTransactionAsync(transactionId);
+
+    // Assert
+    Assert.NotNull(result);
+    Assert.Equal(0, result.RiskScore);
+    Assert.Equal("Low", result.RiskLevel);
+    Assert.False(result.IsSuspicious);
+    Assert.Empty(result.TriggeredRules);
+
+    // Most important assertion:
+    // The disabled rule must never execute.
+    highValueRule.Verify(
+        x => x.IsMatchAsync(
+            It.IsAny<TransactionDto>(),
+            It.IsAny<CancellationToken>()),
+        Times.Never);
+
+    repository.Verify(
+        x => x.AddAsync(
+            It.Is<FraudAssessment>(assessment =>
+                assessment.RiskScore == 0 &&
+                assessment.TriggeredRules.Count == 0),
+            It.IsAny<CancellationToken>()),
+        Times.Once);
 }
 }

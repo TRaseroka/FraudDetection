@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using AutoMapper;
 using FraudDetection.Application.Exceptions;
 
+
 namespace FraudDetection.Application.Services;
 
 public class FraudAssessmentService : IFraudAssessmentService
@@ -15,18 +16,22 @@ public class FraudAssessmentService : IFraudAssessmentService
     private readonly IFraudAssessmentRepository _fraudAssessmentRepository;
     private readonly FraudRuleOptions _options;
     private readonly IMapper _mapper;
+    private readonly IFraudRuleConfigurationRepository _ruleConfigurationRepository;
     public FraudAssessmentService(
         ITransactionClient transactionClient,
         IEnumerable<IFraudRule> fraudRules,
         IFraudAssessmentRepository fraudAssessmentRepository,
         IOptions<FraudRuleOptions> options,
-        IMapper mapper )
+        IMapper mapper,
+        IFraudRuleConfigurationRepository ruleConfigurationRepository)
     {
         _transactionClient = transactionClient;
         _fraudRules = fraudRules;
         _fraudAssessmentRepository = fraudAssessmentRepository;
         _options = options.Value;
-        _mapper = mapper;}
+        _mapper = mapper;
+        _ruleConfigurationRepository = ruleConfigurationRepository;
+    }
 
     public async Task<FraudAssessmentDto?> AssessTransactionAsync(
         string transactionId,
@@ -53,9 +58,18 @@ public class FraudAssessmentService : IFraudAssessmentService
         }
 
         var triggeredRules = new List<TriggeredRule>();
+        var enabledConfigurations =await _ruleConfigurationRepository.GetEnabledAsync(cancellationToken);
 
+      var enabledRuleCodes = enabledConfigurations
+         .Select(x => x.Code)
+         .ToHashSet(StringComparer.OrdinalIgnoreCase);
         foreach (var rule in _fraudRules)
         {
+              if (!enabledRuleCodes.Contains(rule.Code))
+                {
+                   continue;
+                 }
+
             if (await rule.IsMatchAsync(transaction, cancellationToken))
             {
                 triggeredRules.Add(new TriggeredRule

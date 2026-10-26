@@ -1,3 +1,4 @@
+
 services:
   fraud-api:
     build:
@@ -29,8 +30,24 @@ services:
     volumes:
       - fraud_postgres_data:/var/lib/postgresql/data
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4.2
+    container_name: fraud-keycloak
+    command: start-dev
+    ports:
+      - "8082:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: keycloakpassword
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    networks:
+      - default
+      - shared-services
+
 volumes:
   fraud_postgres_data:
+  keycloak_data:
 
 networks:
   shared-services:
